@@ -1,0 +1,20 @@
+[
+  {
+    "id": "shop_demo",
+    "name": "示例店铺",
+    "platform": "douyin-shop",
+    "agent": "shop_demo",
+    "mode": "browser",
+    "metric": "待发货",
+    "connector": "shop_demo-browser",
+    "connect": {
+      "site": "doudian",
+      "url": "https://fxg.jinritemai.com/ffa/mshop/homepage/index",
+      "selector": "body"
+    },
+    "api": null,
+    "created_at": "2026-11-16T09:44:41.482Z",
+    "window": "实时",
+    "window_at": "2026-11-17T12:32:53.367Z"
+  }
+]

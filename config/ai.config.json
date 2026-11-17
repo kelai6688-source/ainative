@@ -1,0 +1,17 @@
+{
+  "llm": {
+    "provider": "deepseek",
+    "base_url": "https://api.deepseek.com",
+    "api_key": "",
+    "model": "deepseek-chat"
+  },
+  "image": {
+    "provider": "modelscope",
+    "base_url": "https://api-inference.modelscope.cn/v1",
+    "api_key": "",
+    "model": "Qwen/Qwen-Image",
+    "access_key": "",
+    "secret_key": ""
+  },
+  "updated_at": "2026-11-16T18:28:14.667Z"
+}

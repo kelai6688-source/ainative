@@ -1,0 +1,62 @@
+{
+  "org": {
+    "name": "AI Native 内核",
+    "logo": "AI"
+  },
+  "owner": {
+    "name": "我",
+    "initial": "S",
+    "role": "创始人 · 拍板定方向"
+  },
+  "business": {
+    "media": [
+      {
+        "id": "dy-main",
+        "name": "抖音大号",
+        "platform": "douyin"
+      },
+      {
+        "id": "dy-sub",
+        "name": "抖音小号",
+        "platform": "douyin"
+      },
+      {
+        "id": "gzh",
+        "name": "公众号",
+        "platform": "wechat"
+      },
+      {
+        "id": "x",
+        "name": "X",
+        "platform": "x"
+      }
+    ],
+    "shops": [
+      {
+        "id": "amazon-a",
+        "name": "亚马逊店铺 A",
+        "platform": "amazon"
+      },
+      {
+        "id": "etsy-b",
+        "name": "Etsy 店铺 B",
+        "platform": "etsy"
+      },
+      {
+        "id": "shopify-c",
+        "name": "Shopify 店铺 C",
+        "platform": "shopify"
+      },
+      {
+        "id": "doudian-a",
+        "name": "抖店 A",
+        "platform": "douyin-shop"
+      },
+      {
+        "id": "shop_demo",
+        "name": "示例店铺",
+        "platform": "douyin-shop"
+      }
+    ]
+  }
+}

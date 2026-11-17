@@ -1,0 +1,24 @@
+# 本机运行时产物，绝不入库
+node_modules/
+.browser/
+logs/
+ui/
+media/
+probe/
+out/
+data/
+*.db
+*.db-wal
+*.db-shm
+*.png
+*.gif
+*.zip
+.env
+# 真实配置只忽略仓库根目录（config/ 下是模板，要入库）
+/policies.json
+/connectors.json
+/shops.json
+/ecom.config.json
+/ai.config.json
+/automation.json
+/profile.json

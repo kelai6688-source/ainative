@@ -1,0 +1,62 @@
+{
+  "_说明": "授权政策：政策内自动执行，破线才上报给你。改这个文件就改授权范围，不用改代码。",
+  "max_single_cny": 200,
+  "_max_single_cny": "单笔动作涉及金额超过这个数，必须问你",
+  "daily_ad_budget_max": 50,
+  "_daily_ad_budget_max": "日投放预算上限（元），超过要问",
+  "protect_product_ids": [],
+  "_protect_product_ids": "主推款商品ID，写进来之后就不许自动下架/改价，一律问你",
+  "protect_title_keywords": [
+    "主推",
+    "爆款",
+    "镇店"
+  ],
+  "_protect_title_keywords": "标题里含这些词的款，同样受保护",
+  "auto_exec": {
+    "douyin.upload-image": {
+      "allow": true,
+      "why": "只上传素材，不改线上商品"
+    },
+    "douyin.set-main-image": {
+      "allow": true,
+      "why": "换主图可逆，且 dry-run 会先打出 before/after"
+    },
+    "douyin.online": {
+      "allow": true,
+      "why": "上架是恢复售卖，风险低于下架"
+    },
+    "douyin.ship": {
+      "allow": true,
+      "why": "发货是履约义务，逾时反而罚"
+    },
+    "douyin.offline": {
+      "allow": true,
+      "unless_protected": true,
+      "why": "非主推款可自动下架；主推款必须问你"
+    },
+    "douyin.price": {
+      "allow": false,
+      "max_pct": 10,
+      "why": "改价默认问你；若在政策里给 max_pct 且单次幅度不超它，可自动"
+    },
+    "douyin.aftersale": {
+      "allow": false,
+      "auto_agree_below": 100,
+      "why": "售后默认问你；金额小于阈值可自动同意"
+    }
+  },
+  "escalate_if": {
+    "gross_margin_below": 0,
+    "gmv_drop_pct_over": 30,
+    "refund_rate_over_pct": 3
+  },
+  "_escalate_if": "这些是分析侧的上报条件，由 ecom-plan / ceo 读取",
+  "qianchuan": {
+    "require_decision": true,
+    "max_budget_change_pct": 30,
+    "max_daily_budget_cny": 2000,
+    "max_single_action_cny": 200,
+    "min_cost_before_judge_cny": 30,
+    "allow_auto_exec": false
+  }
+}

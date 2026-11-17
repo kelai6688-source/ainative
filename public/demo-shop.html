@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>假后台 · 用来验证「自动开页面读数据」</title>
+<style>
+  body{margin:0;background:#f5f6f8;font:14px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif;color:#1a1d21}
+  .top{background:#fff;border-bottom:1px solid #e6e8eb;padding:12px 20px;display:flex;gap:16px;align-items:center}
+  .top b{font-size:15px}
+  .top .who{margin-left:auto;color:#8b95a3;font-size:12.5px}
+  .wrap{padding:22px 20px;display:flex;gap:14px;flex-wrap:wrap}
+  .kpi{background:#fff;border:1px solid #e6e8eb;border-radius:10px;padding:16px 18px;min-width:150px}
+  .kpi .t{color:#8b95a3;font-size:12px}
+  .kpi .v{font-size:30px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e6e8eb;border-radius:10px;overflow:hidden;margin:0 20px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #f0f1f3;font-size:13px}
+  th{background:#fafbfc;color:#8b95a3;font-weight:500}
+  .tag{display:inline-block;padding:1px 8px;border-radius:999px;background:#fff4e6;color:#b45309;font-size:11.5px}
+</style>
+</head>
+<body>
+  <div class="top">
+    <b>抖店后台（演示页）</b>
+    <span style="color:#8b95a3">这不是真的抖店，只是本地一个长得很像的页面</span>
+    <span class="who">店铺：抖店 A · 已登录</span>
+  </div>
+
+  <div class="wrap">
+    <div class="kpi"><div class="t">待发货</div><div class="v" id="pending">12</div></div>
+    <div class="kpi"><div class="t">今日订单</div><div class="v" id="today">37</div></div>
+    <div class="kpi"><div class="t">本周销售额</div><div class="v" id="sales">1,286.40</div></div>
+    <div class="kpi"><div class="t">售后待处理</div><div class="v" id="after">2</div></div>
+  </div>
+
+  <table>
+    <tr><th>订单号</th><th>商品</th><th>金额</th><th>状态</th></tr>
+    <tr><td>DD2026111601</td><td>TS-M-BLACK</td><td>¥89.00</td><td><span class="tag">待发货</span></td></tr>
+    <tr><td>DD2026111602</td><td>TS-L-WHITE</td><td>¥178.00</td><td><span class="tag">待发货</span></td></tr>
+    <tr><td>DD2026111603</td><td>MUG-01</td><td>¥45.00</td><td>已发货</td></tr>
+  </table>
+
+  <p style="padding:14px 20px;color:#8b95a3;font-size:12px">
+    用 <code>#pending</code> 这个选择器就能抓到「12」。真实的抖店后台同理，只是选择器不一样。
+  </p>
+</body>
+</html>

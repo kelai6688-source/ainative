@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>指挥台 · AI Native 内核</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="app-extra.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" id="brand-logo" title="AI Native 内核">AI</span>
+        <span class="brandtxt">
+          <b id="brand-name">AI NATIVE</b>
+          <i>公司运转台</i>
+        </span>
+      </div>
+      <nav class="tabs" id="tabs"></nav>
+      <div class="topright">
+        <span class="live" id="live"><i class="dot"></i><b>连接中</b></span>
+        <span class="duty"><i class="dot ok"></i><b id="duty-count">—</b> 个 Agent 在岗</span>
+        <span class="clock" id="clock">--:--:--</span>
+        <button class="maskbtn" id="maskbtn" title="把店名换成店铺 A / B / C，方便截图给人看">
+          隐藏店名<span class="sw" id="masksw"></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="view"></main>
+
+    <footer class="footer">
+      <div class="foot-left" id="foot-left"></div>
+      <div class="foot-right" id="foot-right"></div>
+    </footer>
+  </div>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-kicker" id="drawer-kicker"></div>
+        <h2 id="drawer-title"></h2>
+      </div>
+      <button class="icon-btn" id="drawer-close" title="关闭">✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+    <div class="drawer-actions" id="drawer-actions"></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <dialog id="dlg" class="dlg">
+    <h3>派活 · 开一张台账卡</h3>
+    <div class="dlg-sub">七项必填。写不出「怎么算完成」，这张卡就开不出来 —— 后端会直接拒。</div>
+    <div id="f-sug" class="sugbox"></div>
+    <label>这件事<input id="f-title" placeholder="给一款 T 恤的标题补上买家在搜的词" /></label>
+    <label>为什么做<input id="f-why" placeholder="上架两周几乎没人来看，多半是搜不到" /></label>
+    <label>要交什么<input id="f-del" placeholder="新标题 + 买家页截图" /></label>
+    <label>怎么算完成<input id="f-def" placeholder="买家页上显示的是新标题" /></label>
+    <div class="dlg-row">
+      <label>级别
+        <select id="f-level">
+          <option value="P0">P0 大事 · 我定</option>
+          <option value="P1" selected>P1 中事 · CEO 定</option>
+          <option value="P2">P2 小事 · AI 定</option>
+          <option value="P3">P3 谁做谁定</option>
+        </select>
+      </label>
+      <label>负责<select id="f-owner"></select></label>
+      <label>第几天回看<input id="f-day" type="number" min="1" value="7" /></label>
+    </div>
+    <div class="dlg-act">
+      <button class="btn" id="dlg-cancel" type="button">取消</button>
+      <button class="btn" id="f-bulk" type="button">把勾选的几条一起派出</button>
+      <button class="btn primary" id="dlg-ok" type="button">派出去</button>
+    </div>
+  </dialog>
+
+  <dialog id="aidlg" class="dlg" style="width:min(760px,94vw)">
+    <h3>模型接入 · 让 Agent 自己写文案、出主图</h3>
+    <div class="dlg-sub">
+      填完保存就能用。点「测试」只验能不能连上（不花钱、不生成图）。
+      密钥只存本机 <code>ai.config.json</code>，界面回显只给后四位。
+    </div>
+
+    <div class="ai-sec">
+      <div class="ai-hd"><b>文案模型（LLM）</b><span id="ai-llm-state" class="ai-state">—</span></div>
+      <div class="dlg-row">
+        <label>服务商<select id="ai-llm-provider"></select></label>
+        <label>模型名<input id="ai-llm-model" placeholder="qwen2.5:7b" /></label>
+      </div>
+      <div class="dlg-row">
+        <label>接口地址（base_url）<input id="ai-llm-base" placeholder="http://127.0.0.1:11434" /></label>
+        <label>API Key<input id="ai-llm-key" type="password" placeholder="本地 Ollama 不用填" /></label>
+      </div>
+      <div class="ai-act">
+        <button class="btn" id="ai-llm-test" type="button">测试连通</button>
+        <span id="ai-llm-msg" class="ai-msg"></span>
+      </div>
+    </div>
+
+    <div class="ai-sec">
+      <div class="ai-hd"><b>图像模型（主图 / 详情图）</b><span id="ai-img-state" class="ai-state">—</span></div>
+      <div class="dlg-row">
+        <label>服务商<select id="ai-img-provider"></select></label>
+        <label>模型名<input id="ai-img-model" placeholder="seedream-4.0" /></label>
+      </div>
+      <div class="dlg-row">
+        <label>接口地址（base_url）<input id="ai-img-base" placeholder="https://visual.volcengineapi.com" /></label>
+        <label>API Key<input id="ai-img-key" type="password" placeholder="OpenAI 兼容时填这个" /></label>
+      </div>
+      <div class="dlg-row">
+        <label>AccessKey（即梦）<input id="ai-img-ak" placeholder="火山引擎 AK" /></label>
+        <label>SecretKey（即梦）<input id="ai-img-sk" type="password" placeholder="火山引擎 SK" /></label>
+      </div>
+      <div class="ai-act">
+        <button class="btn" id="ai-img-test" type="button">测试连通</button>
+        <span id="ai-img-msg" class="ai-msg"></span>
+      </div>
+    </div>
+
+    <div class="dlg-act">
+      <span id="ai-hint" style="margin-right:auto;font-size:11px;color:var(--fg3)"></span>
+      <button class="btn" id="ai-cancel" type="button">取消</button>
+      <button class="btn primary" id="ai-ok" type="button">保存</button>
+    </div>
+  </dialog>
+
+  <dialog id="costdlg" class="dlg">
+    <h3>经营参数 · <span id="c-shopname" style="color:var(--ac)">—</span></h3>
+    <div class="dlg-sub">每家店各存一套，互不影响。这些数在你后台的「结算/费率」页和进货单上，填一次以后所有报告都按它算。</div>
+    <div class="dlg-row">
+      <label>类目扣点（%）<input id="c-fee" type="number" step="0.01" placeholder="未填" title="后台 资金-结算管理-费率" /></label>
+      <label>支付手续费（%）<input id="c-pay" type="number" step="0.01" value="0.6" /></label>
+    </div>
+    <div class="dlg-row">
+      <label>单均物流（元）<input id="c-ship" type="number" step="0.1" placeholder="包邮填 0，不知道就留空" /></label>
+      <label>单均包装（元）<input id="c-pack" type="number" step="0.1" placeholder="已含就填 0" /></label>
+    </div>
+    <div style="font-size:11.5px;color:var(--fg3);margin:14px 0 6px">每个 SKU 的拿货成本（元/件）—— 同一商品不同规格成本不同，逐行填</div>
+    <div id="c-skus" style="max-height:260px;overflow:auto"></div>
+    <div class="dlg-act">
+      <button class="btn" id="c-cancel" type="button">取消</button>
+      <button class="btn primary" id="c-ok" type="button">保存</button>
+    </div>
+  </dialog>
+
+  <dialog id="logindlg" class="dlg">
+    <h3>扫码登录一次</h3>
+    <div class="dlg-sub">
+      点下面的按钮 → <b>你桌面上会弹出一个 Chrome 窗口</b> → 在<b>那个窗口里</b>扫码。
+      二维码是平台登录页自己画的，不在我们这页里。登录成功后脚本自动存会话并关窗。
+    </div>
+    <div class="dlg-row">
+      <label>站点键（会话存哪）<select id="l-site">
+        <option value="doudian">抖店 doudian</option>
+        <option value="taobao">淘宝 taobao</option>
+        <option value="pdd">拼多多 pdd</option>
+        <option value="custom">自定义…</option>
+      </select></label>
+      <label>登录页地址（留空用默认）<input id="l-url" placeholder="https://fxg.jinritemai.com/login/common" /></label>
+    </div>
+    <div class="dlg-row">
+      <label>登录成功后的路径关键字（可选）<input id="l-done" placeholder="/ffa/ 或 /dashboard" /></label>
+      <label>等待秒数<input id="l-timeout" type="number" value="300" /></label>
+    </div>
+    <div id="l-status" class="dlg-hint">还没开始。</div>
+    <div class="dlg-act">
+      <button class="btn" id="l-cancel" type="button">关闭</button>
+      <button class="btn primary" id="l-go" type="button">打开浏览器去扫码</button>
+    </div>
+  </dialog>
+
+  <dialog id="shopdlg" class="dlg">
+    <h3>开一个店铺</h3>
+    <div class="dlg-sub">一家店 = 一个 Agent + 一条连接器。<b>CSV 方式现在就能跑</b>；官方 API 方式要填对应的环境变量。</div>
+    <label>店铺名<input id="s-name" placeholder="例：抖店 A（你认得出的名字就行）" /></label>
+    <div class="dlg-row">
+      <label>平台<select id="s-platform"></select></label>
+      <label>接入方式
+        <select id="s-mode">
+          <option value="csv">本地报表 CSV（马上能用）</option>
+          <option value="browser">扫码登录 · 自动读后台页面</option>
+          <option value="api">官方 API（要凭证）</option>
+        </select>
+      </label>
+      <label>指标名<input id="s-metric" placeholder="待发货" value="待发货" /></label>
+    </div>
+    <div id="s-hint" class="dlg-hint"></div>
+    <div id="s-csv-box">
+      <label>CSV 路径（相对本目录）<input id="s-path" placeholder="data/doudian-orders.csv" /></label>
+      <div class="dlg-row">
+        <label>取数方式
+          <select id="s-how">
+            <option value="count">数行数 → 待发货单数</option>
+            <option value="sum">某列求和 → 本周销售额</option>
+            <option value="value">取最后一行某列 → 客单价</option>
+          </select>
+        </label>
+        <label>列名（求和/取值用）<input id="s-col" placeholder="amount" /></label>
+        <label>过滤条件<input id="s-where" placeholder="status=待发货" /></label>
+      </div>
+      <div class="dlg-hint">表头你自己定，只要「取数方式」用的那列对得上。<br>
+        例：<code>order_id,sku,qty,amount,status</code> → 数行数 + <code>status=待发货</code> = 待发货单数。</div>
+    </div>
+    <div id="s-web-box" style="display:none">
+      <label>后台页面地址（你要抓的那个页面）<input id="s-url" placeholder="https://fxg.jinritemai.com/ffa/morder/order/list" /></label>
+      <div class="dlg-row">
+        <label>选择器（F12 里 Copy selector）<input id="s-selector" placeholder="#pending 或 .order-badge" /></label>
+        <label>站点键（会话存哪）<input id="s-site" placeholder="doudian" /></label>
+        <label>等待超时 ms<input id="s-wait" type="number" value="8000" /></label>
+      </div>
+      <div class="dlg-hint">
+        先点下面「扫码登录」：在你桌面开一个浏览器，你扫码进去，登录成功它自己存会话并关窗。
+        <br>之后每次 sync / watch 都自动开页面读这个数，<b>不用导出、不用点</b>。
+      </div>
+      <button class="btn" id="s-login" type="button">扫码登录一次</button>
+    </div>
+
+    <div class="dlg-act">
+      <button class="btn" id="s-cancel" type="button">取消</button>
+      <button class="btn primary" id="s-ok" type="button">开店</button>
+    </div>
+  </dialog>
+
+  <div id="toast"></div>
+  <script src="ai-panel.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+{
+  "base": "http://127.0.0.1:8788",
+  "note": "enabled=false 的不跑。把需要的 env 变量设好再打开。",
+  "connectors": [
+    {
+      "id": "npm",
+      "enabled": true,
+      "agent": "oss",
+      "label": "周下载",
+      "package": "openai",
+      "module": "npm"
+    },
+    {
+      "id": "github",
+      "enabled": true,
+      "agent": "oss",
+      "label": "本周新增星",
+      "repo": "simonlin1212/a-stock-data",
+      "token_env": "GITHUB_TOKEN",
+      "module": "github"
+    },
+    {
+      "id": "csv",
+      "enabled": false,
+      "agent": "shop",
+      "label": "本周销售",
+      "path": "data/shop-week.csv",
+      "sum": "amount",
+      "where": "store=etsy",
+      "module": "csv"
+    },
+    {
+      "id": "amazon-sp",
+      "enabled": false,
+      "agent": "shop",
+      "label": "本周销售",
+      "module": "amazon-sp"
+    },
+    {
+      "id": "printful",
+      "enabled": false,
+      "agent": "shop",
+      "label": "每单成本",
+      "module": "printful"
+    },
+    {
+      "id": "douyin",
+      "enabled": false,
+      "agent": "content",
+      "label": "本周新增触达",
+      "module": "douyin"
+    },
+    {
+      "id": "douyin-shop",
+      "enabled": false,
+      "agent": "dyshop",
+      "label": "待发货订单",
+      "method": "order.searchList",
+      "param": {
+        "page": 0,
+        "size": 1,
+        "order_status": 2
+      },
+      "module": "douyin-shop"
+    },
+    {
+      "id": "shop_demo-browser",
+      "enabled": true,
+      "module": "browser-session",
+      "agent": "shop_demo",
+      "label": "待发货",
+      "site": "doudian",
+      "url": "https://fxg.jinritemai.com/ffa/mshop/homepage/index",
+      "selector": "body",
+      "pick": "number",
+      "wait": 15000,
+      "waitText": "待发货",
+      "main": true,
+      "metrics": [
+        {
+          "key": "shop_demo-browser",
+          "label": "待发货",
+          "main": true,
+          "regex": "待发货\\s*(?:…\\s*)?([\\d.]+|[-—])",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-after",
+          "label": "售后待处理",
+          "regex": "待处理售后\\s*(?:…\\s*)?([\\d.]+|[-—])",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-gmv",
+          "label": "成交金额",
+          "regex": "成交金额\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-orders",
+          "label": "成交订单数",
+          "regex": "成交订单数\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-views",
+          "label": "商品曝光",
+          "regex": "商品曝光人数\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-clicks",
+          "label": "商品点击",
+          "regex": "商品点击人数\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-buyers",
+          "label": "成交人数",
+          "regex": "成交人数\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-pay",
+          "label": "用户支付金额",
+          "regex": "用户支付金额\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-settle",
+          "label": "结算金额",
+          "regex": "结算金额\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-aov",
+          "label": "客单价",
+          "regex": "客单价\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-adspend",
+          "label": "投放消耗",
+          "regex": "投放消耗\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-adratio",
+          "label": "投放费比",
+          "regex": "投放费比\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-refund",
+          "label": "退款金额",
+          "regex": "退款金额[^\\d]{0,16}([\\d.]+|[-—])"
+        },
+        {
+          "key": "shop_demo-ctr",
+          "label": "曝点转化率",
+          "regex": "商品曝光-点击转化率\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-cvr",
+          "label": "点击成交率",
+          "regex": "商品点击-成交转化率\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-shortvideo",
+          "label": "短视频成交",
+          "regex": "短视频[\\s\\S]{0,16}?成交额\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-live",
+          "label": "直播引流成交",
+          "regex": "直播间成交额\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)"
+        },
+        {
+          "key": "shop_demo-searchview",
+          "label": "搜索曝光人数",
+          "regex": "搜索曝光人数\\s*(?:店铺被投\\s*)?[¥￥]?\\s*(?:…\\s*)?([\\d.]+|[-—])\\s*(万|亿)?\\s*(?:%|构成|较)",
+          "unitField": true
+        },
+        {
+          "key": "shop_demo-score",
+          "label": "体验分",
+          "regex": "商家体验分[\\s\\S]{0,30}?((?:9|10)\\d?|\\d{2,3})\\s*分"
+        },
+        {
+          "key": "shop_demo-score-goods",
+          "label": "商品分",
+          "regex": "商品\\s*(\\d{2,3})\\s*分"
+        },
+        {
+          "key": "shop_demo-score-logi",
+          "label": "物流分",
+          "regex": "物流\\s*(\\d{2,3})\\s*分"
+        },
+        {
+          "key": "shop_demo-score-svc",
+          "label": "服务分",
+          "regex": "服务\\s*(\\d{2,3})\\s*分"
+        },
+        {
+          "key": "shop_demo-fund",
+          "label": "账户资金",
+          "regex": "账户资金\\s*¥?\\s*([\\d.]+)"
+        }
+      ],
+      "requireTab": true
+    },
+    {
+      "id": "doudian-orders",
+      "module": "doudian-orders",
+      "agent": "shop_demo",
+      "label": "订单明细",
+      "enabled": true,
+      "site": "doudian",
+      "url": "https://fxg.jinritemai.com/ffa/morder/order/list",
+      "maxOrders": 2000,
+      "maxPages": 50
+    },
+    {
+      "id": "doudian-products",
+      "module": "doudian-products",
+      "agent": "shop_demo",
+      "label": "商品清单",
+      "enabled": true,
+      "site": "doudian",
+      "url": "https://fxg.jinritemai.com/ffa/g/list",
+      "maxRows": 200
+    },
+    {
+      "id": "doudian-skus",
+      "module": "doudian-skus",
+      "agent": "shop_demo",
+      "label": "SKU清单",
+      "enabled": true,
+      "site": "doudian",
+      "maxProducts": 20
+    },
+    {
+      "id": "doudian-bill",
+      "module": "doudian-bill",
+      "agent": "shop_demo",
+      "label": "结算账单",
+      "enabled": true,
+      "site": "doudian",
+      "maxPages": 20
+    },
+    {
+      "id": "buyin-hot",
+      "module": "buyin-hot",
+      "agent": "pick",
+      "label": "精选联盟爆款榜",
+      "enabled": true,
+      "site": "buyin",
+      "category": "食品饮料",
+      "window": "近2小时",
+      "maxItems": 100
+    },
+    {
+      "id": "buyin-hot-all",
+      "module": "buyin-hot",
+      "agent": "pick",
+      "label": "精选联盟爆款榜·全类目",
+      "enabled": true,
+      "site": "buyin",
+      "category": "全类目",
+      "window": "近2小时",
+      "maxItems": 100
+    },
+    {
+      "id": "compass-rank-goods",
+      "module": "compass-rank",
+      "page": "rank",
+      "agent": "pick",
+      "label": "罗盘商品榜",
+      "enabled": true,
+      "site": "doudian",
+      "categoryPath": "食品饮料/粮油干货/方便速食",
+      "window": "近7天",
+      "maxPages": 2,
+      "main": false,
+      "every_min": 360,
+      "category": "食品饮料"
+    },
+    {
+      "id": "compass-cate-mining",
+      "module": "compass-rank",
+      "page": "mining",
+      "agent": "pick",
+      "label": "罗盘类目机会",
+      "enabled": true,
+      "site": "doudian",
+      "categoryPath": "食品饮料/粮油干货/方便速食",
+      "window": "近7天",
+      "every_min": 360,
+      "category": "食品饮料"
+    },
+    {
+      "id": "qianchuan",
+      "module": "qianchuan",
+      "agent": "tc",
+      "label": "千川计划",
+      "enabled": true,
+      "site": "doudian",
+      "every_min": 30,
+      "main": true
+    },
+    {
+      "id": "qianchuan-materials",
+      "module": "qianchuan",
+      "mode": "materials",
+      "agent": "tc",
+      "label": "千川素材库",
+      "enabled": true,
+      "site": "doudian",
+      "maxItems": 50,
+      "main": false,
+      "every_min": 120
+    }
+  ]
+}

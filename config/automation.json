@@ -1,0 +1,63 @@
+{
+  "_说明": "mode: off 只拉数+巡视 / assist 命中规则就开卡（P0 只出决策包）/ auto 连 P1 也直接开工。P0 永远要人批。",
+  "mode": "assist",
+  "agents": {
+    "shop": true,
+    "content": true,
+    "oss": true
+  },
+  "rules": [
+    {
+      "id": "shop-sales-low",
+      "agent": "shop",
+      "when": {
+        "metric_label": "本周销售",
+        "op": "<",
+        "value": 300
+      },
+      "then": {
+        "title": "本周销售低于 300，拆流量看是哪一款掉",
+        "deliverable": "拆到单品 / 搜索词的流量表 + 3 条改法",
+        "done_def": "每个在售品都有本周曝光、点击、转化三列；至少给出 3 条可执行改法",
+        "level": "P1",
+        "check_day": 3
+      }
+    },
+    {
+      "id": "content-reach-drop",
+      "agent": "content",
+      "when": {
+        "metric_label": "本周新增触达",
+        "op": "<",
+        "value": 15000
+      },
+      "then": {
+        "title": "触达跌破 1.5 万，盘 3 个选题补上",
+        "deliverable": "3 个选题 + 每个的参考爆款链接 + 拍摄难度评估",
+        "done_def": "3 个选题都有参考链接；至少 1 个能在 2 天内拍完",
+        "level": "P1",
+        "check_day": 2
+      }
+    },
+    {
+      "id": "oss-stale",
+      "agent": "oss",
+      "when": {
+        "alive": false
+      },
+      "then": {
+        "title": "开源数据源挂了，换 token 或改用缓存口径",
+        "deliverable": "二选一：换 GITHUB_TOKEN / 声明改用缓存并标注滞后天数",
+        "done_def": "开源 Agent 的灯重新变绿，且卡底写明数据时间",
+        "level": "P1",
+        "check_day": 1
+      }
+    }
+  ],
+  "schedule": {
+    "sync_min": 120,
+    "patrol_min": 60,
+    "brief_at": "08:20",
+    "kb_at": "22:30"
+  }
+}

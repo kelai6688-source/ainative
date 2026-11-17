@@ -1,0 +1,13 @@
+{
+  "name": "ainative-kernel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "电商 AI Native 闭环内核：数据底座 → 早报 → 台账 → 决策包/决定库 → 判据验收。零依赖。",
+  "scripts": {
+    "seed": "node seed.mjs --reset",
+    "start": "node server.mjs",
+    "dev": "node server.mjs"
+  },
+  "engines": { "node": ">=22.5" }
+}
